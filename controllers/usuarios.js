@@ -13,6 +13,7 @@ const usuariosGet = async (req, res = response) => {
 
     res.json({ total, usuarios });
 };
+
 const usuariosPost = async (req, res = response) => {
     const { nombre, correo, password, rol } = req.body;
     const usuario = new Usuario({ nombre, correo, password, rol });
@@ -26,6 +27,7 @@ const usuariosPost = async (req, res = response) => {
 
     res.json(usuario);
 };
+
 const usuariosPut = async (req, res = response) => {
     const { id } = req.params;
     const { _id, password, google, correo, ...resto } = req.body;
@@ -41,23 +43,24 @@ const usuariosPut = async (req, res = response) => {
         usuario
     });
 };
+
 const usuariosPatch = (req, res = response) => {
     res.json({
         "msg": 'patch API - controlador'
     });
 };
+
 const usuariosDelete = async (req, res = response) => {
     const { id } = req.params;
     //Fisicamente se borra el documento
     // const usuario = await Usuario.findByIdAndDelete(id)
 
     //Se elimina de forma logica
-    const usuario = await Usuario.findByIdAndUpdate(id, {estado: false})
+    const usuario = await Usuario.findByIdAndUpdate(id, { estado: false })
+    const usuarioAutenticado = req.usuario;
 
-    res.json(usuario)
+    res.json({usuario, usuarioAutenticado})
 };
-
-
 
 export {
     usuariosGet,
