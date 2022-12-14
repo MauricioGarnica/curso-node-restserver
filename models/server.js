@@ -3,9 +3,11 @@ import {router as RouterAuth} from '../routes/auth.js'
 import {router as RouterCategorias} from '../routes/categorias.js'
 import {router as RouterProductos} from '../routes/productos.js'
 import {router as RouterBuscar} from '../routes/buscar.js';
+import {router as RouterUploads} from '../routes/uploads.js';
 import express from 'express';
 import cors from 'cors';
 import { dbConnection } from '../database/config.js';
+import fileUpload from 'express-fileupload';
 
 class Server{
     constructor(
@@ -18,7 +20,8 @@ class Server{
             categorias: '/api/categorias',
             usuarios:'/api/usuarios',
             productos: '/api/productos',
-            buscar: '/api/buscar'
+            buscar: '/api/buscar',
+            uploads: '/api/uploads'
         }
 
         //Conectar a BD
@@ -44,6 +47,13 @@ class Server{
 
         //Directorio publico
         this.app.use(express.static('public'));
+
+        //Fileupload - Carga de archivos
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }))
     }
 
     routes(){
@@ -52,6 +62,7 @@ class Server{
         this.app.use(this.paths.categorias, RouterCategorias);
         this.app.use(this.paths.productos, RouterProductos);
         this.app.use(this.paths.buscar, RouterBuscar);
+        this.app.use(this.paths.uploads, RouterUploads);
     }
 
     listen(){
